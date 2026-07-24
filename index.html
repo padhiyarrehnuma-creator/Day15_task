@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>GadgetPoint · E-Commerce</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ========================================================= -->
+<!--  CREATE ACCOUNT PAGE (Logout ke baad fir se dikhega)       -->
+<!-- ========================================================= -->
+<div id="createAccountPage" class="account-page">
+    <div class="account-container">
+        <div class="account-box">
+            <div class="account-logo">
+                <h1><span>Gadget</span>Point</h1>
+                <p>Create your account to get started</p>
+            </div>
+            <form id="createAccountForm" autocomplete="off">
+                <input type="text" id="accFullName" placeholder="Full Name" required autocomplete="off" />
+                <input type="email" id="accEmail" placeholder="Email Address" required autocomplete="off" />
+                <input type="tel" id="accPhone" placeholder="Phone Number" required autocomplete="off" />
+                <div class="password-field">
+                    <input type="password" id="accPassword" placeholder="Create Password" required autocomplete="new-password" />
+                    <button type="button" class="toggle-password" data-target="accPassword">👁️</button>
+                </div>
+                <div class="password-field">
+                    <input type="password" id="accConfirmPassword" placeholder="Confirm Password" required autocomplete="new-password" />
+                    <button type="button" class="toggle-password" data-target="accConfirmPassword">👁️</button>
+                </div>
+                <button type="submit" class="create-account-btn">🚀 Create Account</button>
+            </form>
+            <p class="account-toggle-text">
+                Already have an account? <a href="#" id="showLoginPage">Login here</a>
+            </p>
+        </div>
+
+        <!-- Login Box -->
+        <div class="account-box" id="loginBox" style="display: none;">
+            <div class="account-logo">
+                <h1><span>Gadget</span>Point</h1>
+                <p>Welcome back! Login to continue</p>
+            </div>
+            <form id="loginForm" autocomplete="off">
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="off" />
+                <div class="password-field">
+                    <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password" />
+                    <button type="button" class="toggle-password" data-target="loginPassword">👁️</button>
+                </div>
+                <button type="submit" class="create-account-btn">🔐 Login</button>
+            </form>
+            <p class="account-toggle-text">
+                Don't have an account? <a href="#" id="showSignupPage">Create one now</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  MAIN APP (Account create karne ke baad hi dikhega)        -->
+<!-- ========================================================= -->
+<div id="mainApp" style="display: none;">
+
+    <!-- ===== HEADER / NAVBAR ===== -->
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <a href="#" data-section="home"><span>Gadget</span>Point</a>
+            </div>
+            
+            <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+            <label for="nav-toggle" class="nav-toggle-label">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-section="home">🏠 Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="about">📖 About</a></li>
+                    <li><a href="#" class="nav-link" data-section="products">📱 Products</a></li>
+                    <li><a href="#" class="nav-link" data-section="offers">🔥 Offers</a></li>
+                    <li><a href="#" class="nav-link" data-section="profile">👤 Profile</a></li>
+                </ul>
+            </nav>
+            
+            <div class="nav-actions">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search products..." id="searchInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                    <button type="button" id="searchBtn">🔍</button>
+                </div>
+                <a href="#" class="wishlist-icon" id="wishlistIcon">❤️ <span class="wishlist-badge" id="wishlistCount">0</span></a>
+                <a href="#" class="cart-icon" id="cartIcon">🛒 <span class="cart-badge" id="cartCount">0</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ===== HOME SECTION ===== -->
+        <section id="home" class="section active">
+            <!-- Slider -->
+            <div class="slider-container">
+                <div class="slider-wrapper" id="sliderWrapper">
+                    <div class="slide active">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge">🔥 Mega Sale</span>
+                                <h2>Up to 50% OFF</h2>
+                                <p>Smartphones, Laptops & Wearables</p>
+                                <a href="#" class="slide-btn" data-section="products">Shop Now →</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300&h=300&fit=crop&auto=format" alt="Smartphone Sale" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge">💻 Laptop Fest</span>
+                                <h2>Premium Laptops</h2>
+                                <p>Starting from ₹49,999</p>
+                                <a href="#" class="slide-btn" data-section="products">Explore →</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=300&fit=crop&auto=format" alt="Laptop Sale" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge">⌚ Wearable Tech</span>
+                                <h2>Smart Watches</h2>
+                                <p>Up to 40% OFF</p>
+                                <a href="#" class="slide-btn" data-section="products">View Deals →</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1544117519-31a4b719223d?w=300&h=300&fit=crop&auto=format" alt="Watch Sale" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge">🎧 Audio Zone</span>
+                                <h2>Premium Headphones</h2>
+                                <p>Buy 2 Get 1 FREE</p>
+                                <a href="#" class="slide-btn" data-section="products">Shop Audio →</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop&auto=format" alt="Headphone Sale" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="slider-btn prev-btn" id="prevSlide">❮</button>
+                <button class="slider-btn next-btn" id="nextSlide">❯</button>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+
+            <!-- Hero Content -->
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>🚀 TechHub Revolution</h1>
+                    <p>Discover the future of technology with our premium collection of smartphones, laptops, wearables, and smart devices.</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">50K+</span>
+                            <span class="stat-label">Happy Customers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Brands</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">98%</span>
+                            <span class="stat-label">Satisfaction</span>
+                        </div>
+                    </div>
+                    <a href="#" class="cta-button" data-section="products">Explore Devices</a>
+                </div>
+                <div class="hero-image">
+                    <img src="images/homepage.png" alt="Tech innovation hub" />
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ABOUT US SECTION ===== -->
+        <section id="about" class="section hidden">
+            <h2>About GadgetPoint</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Welcome to <strong>GadgetPoint</strong> – your trusted partner in the world of cutting-edge technology. Since our inception in 2020, we've been on a mission to make premium electronics accessible to everyone.</p>
+                    <p>What sets us apart? We believe in more than just selling products. We deliver experiences. Our team of tech enthusiasts carefully selects each item to ensure quality, performance, and value.</p>
+                    <div class="about-highlights">
+                        <div class="highlight-item"><span class="highlight-icon">🚀</span><span>Same Day Delivery</span></div>
+                        <div class="highlight-item"><span class="highlight-icon">🛡️</span><span>2 Year Warranty</span></div>
+                        <div class="highlight-item"><span class="highlight-icon">💎</span><span>Premium Quality</span></div>
+                        <div class="highlight-item"><span class="highlight-icon">🤝</span><span>Trusted by Millions</span></div>
+                    </div>
+                    <p>🌟 <strong>Why choose us?</strong></p>
+                    <ul class="about-features">
+                        <li>✅ 100% Authentic Products</li>
+                        <li>✅ Fast & Free Delivery</li>
+                        <li>✅ 24/7 Customer Support</li>
+                        <li>✅ Easy Returns & Exchanges</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <img src="images/about.png" alt="About GadgetPoint" />
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PRODUCTS SECTION ===== -->
+        <section id="products" class="section hidden">
+            <h2>⭐ Our Products</h2>
+            
+            <div class="category-tabs">
+                <button class="cat-btn active" data-category="all">All</button>
+                <button class="cat-btn" data-category="phones">📱 Phones</button>
+                <button class="cat-btn" data-category="laptops">💻 Laptops</button>
+                <button class="cat-btn" data-category="watches">⌚ Watches</button>
+                <button class="cat-btn" data-category="tablets">📟 Tablets</button>
+                <button class="cat-btn" data-category="headphones">🎧 Headphones</button>
+                <button class="cat-btn" data-category="earbuds">🎵 Earbuds</button>
+                <button class="cat-btn" data-category="handsfree">📞 Hands Free</button>
+                <button class="cat-btn" data-category="chargers">🔋 Chargers</button>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Price:</label>
+                    <select id="priceFilter">
+                        <option value="all">All</option>
+                        <option value="0-10000">Under ₹10,000</option>
+                        <option value="10000-50000">₹10,000 - ₹50,000</option>
+                        <option value="50000-100000">₹50,000 - ₹1,00,000</option>
+                        <option value="100000+">Above ₹1,00,000</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Sort:</label>
+                    <select id="sortFilter">
+                        <option value="default">Default</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Rating</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                <!-- Products rendered by JavaScript -->
+            </div>
+        </section>
+
+        <!-- ===== OFFERS SECTION ===== -->
+        <section id="offers" class="section hidden">
+            <h2>🔥 Mega Offers</h2>
+            <div class="offer-tabs">
+                <button class="tab-btn active" data-tab="regular">Regular</button>
+                <button class="tab-btn" data-tab="festival">Festival</button>
+                <button class="tab-btn" data-tab="combo">Combo</button>
+            </div>
+
+            <div class="offer-tab-content active" id="regular">
+                <div class="offer-grid">
+                    <div class="offer-card"><div class="offer-badge">🎯 Best Deal</div><div class="offer-icon">📱</div><h3>Smartphone Sale</h3><p>Up to 40% OFF on all smartphones</p><div class="offer-details"><span>✅ 6 Months EMI</span><span>✅ Free Case</span><span>✅ 1 Year Warranty</span></div><div class="offer-savings">Save ₹15,000</div></div>
+                    <div class="offer-card"><div class="offer-badge">⚡ Flash Deal</div><div class="offer-icon">💻</div><h3>Laptop Festival</h3><p>Flat 35% OFF on select laptops</p><div class="offer-details"><span>✅ Free Mouse</span><span>✅ 2 Year Warranty</span><span>✅ Free Delivery</span></div><div class="offer-savings">Save ₹25,000</div></div>
+                    <div class="offer-card"><div class="offer-badge">🌟 Mega Deal</div><div class="offer-icon">🎧</div><h3>Audio Zone</h3><p>Buy 2 Get 1 FREE on headphones</p><div class="offer-details"><span>✅ Premium Quality</span><span>✅ Noise Cancelling</span><span>✅ 30h Battery</span></div><div class="offer-savings">Save ₹5,000</div></div>
+                    <div class="offer-card"><div class="offer-badge">🔥 Hot Deal</div><div class="offer-icon">⌚</div><h3>Wearable Tech</h3><p>Up to 50% OFF on smartwatches</p><div class="offer-details"><span>✅ GPS Enabled</span><span>✅ Heart Rate Monitor</span><span>✅ Free Strap</span></div><div class="offer-savings">Save ₹8,000</div></div>
+                </div>
+            </div>
+
+            <div class="offer-tab-content" id="festival">
+                <div class="offer-grid">
+                    <div class="offer-card festival-card"><div class="offer-badge">🎆 Diwali Special</div><div class="offer-icon">🪔</div><h3>Diwali Mega Sale</h3><p>Flat <strong>50% OFF</strong> on electronics</p><div class="offer-details"><span>✅ Kids Clothing Collection</span><span>✅ Toys & Accessories</span><span>✅ Free Gift Wrapping</span></div><div class="offer-savings">Save ₹2,000</div></div>
+                    <div class="offer-card festival-card"><div class="offer-badge">🎄 Christmas Offer</div><div class="offer-icon">🎅</div><h3>Christmas Special</h3><p>Buy 2 Get 1 FREE on all items</p><div class="offer-details"><span>✅ Free Gift Packing</span><span>✅ Free Delivery</span><span>✅ Limited Time Offer</span></div><div class="offer-savings">Save ₹3,000</div></div>
+                    <div class="offer-card festival-card"><div class="offer-badge">🎨 Holi Festival</div><div class="offer-icon">🎨</div><h3>Holi Special</h3><p>Up to <strong>60% OFF</strong> on shoes & toys</p><div class="offer-details"><span>✅ Surprise Gifts</span><span>✅ Free Colors</span><span>✅ Mega Savings</span></div><div class="offer-savings">Save ₹4,000</div></div>
+                    <div class="offer-card festival-card"><div class="offer-badge">🎊 New Year</div><div class="offer-icon">🎉</div><h3>New Year Blast</h3><p>Flat 45% OFF + Extra 10% on all</p><div class="offer-details"><span>✅ Free Party Decor</span><span>✅ 1 Year Subscription</span><span>✅ Free Delivery</span></div><div class="offer-savings">Save ₹6,000</div></div>
+                </div>
+            </div>
+
+            <div class="offer-tab-content" id="combo">
+                <div class="offer-grid">
+                    <div class="offer-card combo-card"><div class="offer-badge">🔄 Smart Combo</div><div class="offer-icon">📱+🎧</div><h3>Phone + Headphones</h3><p>Save 25% when you buy together</p><div class="offer-details"><span>✅ Premium Phone</span><span>✅ Wireless Headphones</span><span>✅ Free Case</span></div><div class="offer-savings">Save ₹12,000</div></div>
+                    <div class="offer-card combo-card"><div class="offer-badge">🔄 Laptop Combo</div><div class="offer-icon">💻+🖱️</div><h3>Laptop + Accessories</h3><p>Save 30% on complete setup</p><div class="offer-details"><span>✅ Laptop Bag</span><span>✅ Wireless Mouse</span><span>✅ USB Hub</span></div><div class="offer-savings">Save ₹8,000</div></div>
+                    <div class="offer-card combo-card"><div class="offer-badge">🔄 Gaming Combo</div><div class="offer-icon">🎮+⌨️</div><h3>Gaming Bundle</h3><p>Console + Keyboard + Mouse</p><div class="offer-details"><span>✅ Gaming Console</span><span>✅ Mechanical Keyboard</span><span>✅ Gaming Mouse</span></div><div class="offer-savings">Save ₹15,000</div></div>
+                    <div class="offer-card combo-card"><div class="offer-badge">🔄 Home Combo</div><div class="offer-icon">🏠+🎵</div><h3>Smart Home Bundle</h3><p>Smart speaker + Lights + Camera</p><div class="offer-details"><span>✅ Smart Speaker</span><span>✅ Smart Bulbs</span><span>✅ Security Camera</span></div><div class="offer-savings">Save ₹6,000</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROFILE SECTION ===== -->
+        <section id="profile" class="section hidden">
+            <h2>👤 My Profile</h2>
+            <div class="profile-container">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-avatar">👤</div>
+                    <div class="profile-info">
+                        <h3 id="profileName">John Doe</h3>
+                        <p id="profileEmail">john@email.com</p>
+                        <p id="profilePhone">+91 98765 43210</p>
+                    </div>
+                </div>
+
+                <!-- Profile Tabs -->
+                <div class="profile-tabs">
+                    <button class="profile-tab active" data-tab="orders">📦 Orders</button>
+                    <button class="profile-tab" data-tab="payments">💳 Payments</button>
+                    <button class="profile-tab" data-tab="addresses">📍 Addresses</button>
+                    <button class="profile-tab" data-tab="settings">⚙️ Settings</button>
+                </div>
+
+                <!-- Orders Tab -->
+                <div class="profile-tab-content active" id="tab-orders">
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#EL2026-001234</span>
+                            <span class="order-status delivered">✅ Delivered</span>
+                        </div>
+                        <div class="order-details">
+                            <span>📱 3 items</span>
+                            <span>₹2,49,899</span>
+                            <span>📅 15 Jan 2026</span>
+                        </div>
+                        <div class="order-tracker">
+                            <div class="tracker-step completed"><span>📦</span> Ordered</div>
+                            <div class="tracker-step completed"><span>🚚</span> Shipped</div>
+                            <div class="tracker-step completed"><span>✅</span> Delivered</div>
+                        </div>
+                    </div>
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#EL2026-001235</span>
+                            <span class="order-status transit">🚚 In Transit</span>
+                        </div>
+                        <div class="order-details">
+                            <span>💻 1 item</span>
+                            <span>₹99,999</span>
+                            <span>📅 10 Jan 2026</span>
+                        </div>
+                        <div class="order-tracker">
+                            <div class="tracker-step completed"><span>📦</span> Ordered</div>
+                            <div class="tracker-step active"><span>🚚</span> Shipped</div>
+                            <div class="tracker-step"><span>✅</span> Delivered</div>
+                        </div>
+                    </div>
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#EL2026-001236</span>
+                            <span class="order-status pending">⏳ Pending</span>
+                        </div>
+                        <div class="order-details">
+                            <span>🎧 2 items</span>
+                            <span>₹14,990</span>
+                            <span>📅 5 Jan 2026</span>
+                        </div>
+                        <div class="order-tracker">
+                            <div class="tracker-step active"><span>📦</span> Ordered</div>
+                            <div class="tracker-step"><span>🚚</span> Shipped</div>
+                            <div class="tracker-step"><span>✅</span> Delivered</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Tab -->
+                <div class="profile-tab-content" id="tab-payments">
+                    <div class="payment-card">
+                        <div class="payment-info">
+                            <span class="payment-amount">₹2,49,899</span>
+                            <span class="payment-status success">✅ Success</span>
+                        </div>
+                        <div class="payment-details">
+                            <span>💳 Credit Card</span>
+                            <span>📅 15 Jan 2026</span>
+                            <span>#EL2026-001234</span>
+                        </div>
+                    </div>
+                    <div class="payment-card">
+                        <div class="payment-info">
+                            <span class="payment-amount">₹99,999</span>
+                            <span class="payment-status success">✅ Success</span>
+                        </div>
+                        <div class="payment-details">
+                            <span>💵 Cash on Delivery</span>
+                            <span>📅 10 Jan 2026</span>
+                            <span>#EL2026-001235</span>
+                        </div>
+                    </div>
+                    <div class="payment-card">
+                        <div class="payment-info">
+                            <span class="payment-amount">₹14,990</span>
+                            <span class="payment-status pending">⏳ Pending</span>
+                        </div>
+                        <div class="payment-details">
+                            <span>📱 UPI</span>
+                            <span>📅 5 Jan 2026</span>
+                            <span>#EL2026-001236</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses Tab -->
+                <div class="profile-tab-content" id="tab-addresses">
+                    <div id="addressList">
+                        <div class="address-card" data-address="home">
+                            <div class="address-type">🏠 Home</div>
+                            <div class="address-detail">123, Main Street, Andheri East, Mumbai - 400001</div>
+                            <span class="address-default">Default</span>
+                            <button class="address-delete" onclick="deleteAddress('home')">🗑️</button>
+                        </div>
+                        <div class="address-card" data-address="office">
+                            <div class="address-type">🏢 Office</div>
+                            <div class="address-detail">456, Business Park, BKC, Mumbai - 400051</div>
+                            <button class="address-delete" onclick="deleteAddress('office')">🗑️</button>
+                        </div>
+                        <div class="address-card" data-address="other">
+                            <div class="address-type">📍 Other</div>
+                            <div class="address-detail">789, Lake View, Pune - 411001</div>
+                            <button class="address-delete" onclick="deleteAddress('other')">🗑️</button>
+                        </div>
+                    </div>
+                    <button class="add-address-btn" id="showAddAddress">+ Add New Address</button>
+                    
+                    <!-- Add Address Form -->
+                    <div id="addAddressForm" style="display:none; margin-top: var(--space-md);">
+                        <input type="text" id="newAddressLabel" placeholder="Label (Home, Office, etc.)" />
+                        <input type="text" id="newAddressDetail" placeholder="Address details" />
+                        <div style="display:flex; gap:var(--space-sm);">
+                            <button id="saveAddressBtn" class="create-account-btn" style="flex:1;">Save Address</button>
+                            <button id="cancelAddressBtn" class="order-back-btn" style="flex:1;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="profile-tab-content" id="tab-settings">
+                    <div class="settings-item" id="editProfileBtn">
+                        <span>✏️ Edit Profile</span>
+                        <span class="settings-arrow">→</span>
+                    </div>
+                    <div class="settings-item" id="changePasswordBtn">
+                        <span>🔑 Change Password</span>
+                        <span class="settings-arrow">→</span>
+                    </div>
+                    <div class="settings-item">
+                        <span>🔔 Notifications</span>
+                        <span class="settings-arrow">→</span>
+                    </div>
+                    <div class="settings-item logout-item" id="logoutBtn">
+                        <span>🚪 Logout</span>
+                        <span class="settings-arrow">→</span>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Form -->
+                <div id="editProfileForm" style="display:none; margin-top: var(--space-md);">
+                    <h4>Edit Profile</h4>
+                    <input type="text" id="editFullName" placeholder="Full Name" />
+                    <input type="email" id="editEmail" placeholder="Email" />
+                    <input type="tel" id="editPhone" placeholder="Phone" />
+                    <div style="display:flex; gap:var(--space-sm);">
+                        <button id="saveProfileBtn" class="create-account-btn" style="flex:1;">Save Changes</button>
+                        <button id="cancelProfileBtn" class="order-back-btn" style="flex:1;">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Change Password Form -->
+                <div id="changePasswordForm" style="display:none; margin-top: var(--space-md);">
+                    <h4>Change Password</h4>
+                    <div class="password-field">
+                        <input type="password" id="currentPassword" placeholder="Current Password" />
+                        <button type="button" class="toggle-password" data-target="currentPassword">👁️</button>
+                    </div>
+                    <div class="password-field">
+                        <input type="password" id="newPassword" placeholder="New Password" />
+                        <button type="button" class="toggle-password" data-target="newPassword">👁️</button>
+                    </div>
+                    <div class="password-field">
+                        <input type="password" id="confirmNewPassword" placeholder="Confirm New Password" />
+                        <button type="button" class="toggle-password" data-target="confirmNewPassword">👁️</button>
+                    </div>
+                    <div style="display:flex; gap:var(--space-sm);">
+                        <button id="savePasswordBtn" class="create-account-btn" style="flex:1;">Change Password</button>
+                        <button id="cancelPasswordBtn" class="order-back-btn" style="flex:1;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================================= -->
+    <!--  CART OVERLAY                                              -->
+    <!-- ========================================================= -->
+    <div id="cartOverlay" class="cart-overlay">
+        <div class="cart-panel">
+            <div class="cart-header">
+                <h2>🛒 Your Cart</h2>
+                <button id="closeCart" class="close-cart">✕</button>
+            </div>
+            <div id="cartItems"></div>
+            <div class="coupon-section">
+                <input type="text" id="couponInput" placeholder="Enter coupon code" />
+                <button id="applyCouponBtn">Apply</button>
+            </div>
+            <div id="cartTotal"></div>
+            <button id="confirmOrderBtn" class="confirm-order-btn">✅ Confirm Order</button>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!--  WISHLIST OVERLAY                                          -->
+    <!-- ========================================================= -->
+    <div id="wishlistOverlay" class="wishlist-overlay">
+        <div class="wishlist-panel">
+            <div class="wishlist-header">
+                <h2>❤️ Your Wishlist</h2>
+                <button id="closeWishlist" class="close-wishlist">✕</button>
+            </div>
+            <div id="wishlistItems"></div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!--  PRODUCT POPUP                                             -->
+    <!-- ========================================================= -->
+    <div id="productPopup" class="product-popup">
+        <div class="popup-content">
+            <button id="closePopup" class="close-popup">✕</button>
+            <div class="popup-body">
+                <div class="popup-image">
+                    <img id="popupImg" src="" alt="" />
+                </div>
+                <div class="popup-info">
+                    <h2 id="popupName"></h2>
+                    <p id="popupDesc"></p>
+                    <p class="popup-price" id="popupPrice"></p>
+                    <div class="popup-rating">
+                        <span>Your Rating:</span>
+                        <div class="popup-stars" id="popupStars">
+                            <span data-value="1">★</span>
+                            <span data-value="2">★</span>
+                            <span data-value="3">★</span>
+                            <span data-value="4">★</span>
+                            <span data-value="5">★</span>
+                        </div>
+                        <span id="popupRatingText">Not rated</span>
+                    </div>
+                    <div class="popup-quantity">
+                        <label>Quantity:</label>
+                        <button id="qtyMinus">-</button>
+                        <span id="qtyValue">1</span>
+                        <button id="qtyPlus">+</button>
+                    </div>
+                    <button id="popupAddToCart" class="add-to-cart">Add to Cart</button>
+                    <div class="popup-comment">
+                        <label>Leave a Comment:</label>
+                        <textarea id="popupComment" placeholder="Write your review..." rows="3"></textarea>
+                        <button id="popupSubmitComment" class="rating-submit">Submit Comment</button>
+                    </div>
+                    <div id="popupComments" class="popup-comments"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!--  ORDER CONFIRMATION POPUP                                  -->
+    <!-- ========================================================= -->
+    <div id="orderPopup" class="order-popup">
+        <div class="order-popup-content">
+            <button id="closeOrderPopup" class="close-popup">✕</button>
+            <div class="order-popup-body">
+                <h2>📦 Confirm Order</h2>
+                <div class="order-step" id="orderStep1">
+                    <h3>📍 Shipping Address</h3>
+                    <div class="address-select" id="orderAddressSelect"></div>
+                    <button class="order-next-btn" onclick="goToOrderStep(2)">Next →</button>
+                </div>
+                <div class="order-step" id="orderStep2" style="display:none;">
+                    <h3>💳 Payment Method</h3>
+                    <div class="payment-methods">
+                        <div class="payment-option" data-method="card" onclick="selectPayment('card')"><span>💳 Credit/Debit Card</span></div>
+                        <div class="payment-option" data-method="netbanking" onclick="selectPayment('netbanking')"><span>🏦 Net Banking</span></div>
+                        <div class="payment-option selected" data-method="cod" onclick="selectPayment('cod')"><span>💵 Cash on Delivery</span></div>
+                        <div class="payment-option" data-method="upi" onclick="selectPayment('upi')"><span>📱 UPI (GPay/PhonePe)</span></div>
+                    </div>
+                    <div id="cardDetails" style="display:none;" class="card-details">
+                        <input type="text" placeholder="Card Number" />
+                        <div class="card-row"><input type="text" placeholder="MM/YY" /><input type="password" placeholder="CVV" /></div>
+                    </div>
+                    <div class="order-summary">
+                        <h4>📦 Order Summary</h4>
+                        <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">₹3,49,898</span></div>
+                        <div class="summary-row"><span>Discount</span><span id="summaryDiscount">-₹15,000</span></div>
+                        <div class="summary-row"><span>Delivery</span><span>Free</span></div>
+                        <div class="summary-row"><span>Tax (GST)</span><span id="summaryTax">+₹20,994</span></div>
+                        <div class="summary-row total"><span>Total</span><span id="summaryTotal">₹3,55,892</span></div>
+                    </div>
+                    <div class="order-buttons">
+                        <button class="order-back-btn" onclick="goToOrderStep(1)">← Back</button>
+                        <button class="order-place-btn" onclick="placeOrder()">🔒 Place Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!--  ORDER SUCCESS POPUP                                       -->
+    <!-- ========================================================= -->
+    <div id="successPopup" class="success-popup">
+        <div class="success-popup-content">
+            <div class="success-icon">🎉</div>
+            <h2>Payment Successful!</h2>
+            <p class="success-sub">✅ Order Placed Successfully</p>
+            <div class="success-details">
+                <div class="success-row"><span>Order #:</span><span id="successOrderId">EL2026-001236</span></div>
+                <div class="success-row"><span>Date:</span><span id="successDate">16 Jan 2026, 10:30 AM</span></div>
+                <div class="success-row"><span>Amount:</span><span id="successAmount">₹3,55,892</span></div>
+                <div class="success-row"><span>Payment:</span><span id="successPayment">Cash on Delivery</span></div>
+                <div class="success-row"><span>Delivery:</span><span>2-3 Business Days</span></div>
+            </div>
+            <div class="success-address">
+                <p><strong>📍 Shipping Address:</strong></p>
+                <p id="successAddress">John Doe, 123, Main Street, Andheri East, Mumbai - 400001</p>
+            </div>
+            <div class="success-buttons">
+                <button class="success-btn primary" onclick="closeSuccess()">🏠 Continue Shopping</button>
+                <button class="success-btn secondary" onclick="closeSuccessAndGoProfile()">👤 View Orders</button>
+                <button class="success-btn secondary" onclick="downloadInvoice()">💳 Download Invoice</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!--  CHATBOT / HELP CENTER (10 Topics)                        -->
+    <!-- ========================================================= -->
+    <div class="chatbot-toggle" id="chatbotToggle">💬</div>
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <span>💬 Help Center</span>
+            <button class="chatbot-close" id="chatbotClose">✕</button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-msg bot"><p>🤖 Hi! I'm ElectroBot. How can I help you today?</p></div>
+        </div>
+        <div class="chatbot-quick-replies" id="chatbotQuickReplies"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Type your message..." />
+            <button id="chatbotSend">Send</button>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!--  DOWN TO TOP BUTTON                                        -->
+    <!-- ========================================================= -->
+    <button id="downToTopBtn" class="down-to-top-btn" title="Go to top">⬆</button>
+
+    <!-- ========================================================= -->
+    <!--  FOOTER                                                    -->
+    <!-- ========================================================= -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>GadgetPoint</h4>
+                <p>Premium electronics for every need.</p>
+                <p>&copy; 2026 GadgetPoint</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#" data-section="home">Home</a></li>
+                    <li><a href="#" data-section="about">About Us</a></li>
+                    <li><a href="#" data-section="products">Products</a></li>
+                    <li><a href="#" data-section="offers">Offers</a></li>
+                    <li><a href="#" data-section="profile">Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li>📧 rehnumapadhiyar@gmail.com</li>
+                    <li>📞 +91 74878 14056</li>
+                    <li>📍 Ahmedabad</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <ul class="social-links">
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Built with ❤️ for Frontend Internship · Week 3 · Day 15</p>
+        </div>
+    </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
