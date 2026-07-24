@@ -1889,6 +1889,7 @@ section h2 {
     border-radius: var(--radius-md);
     color: var(--text-primary);
     font-size: 0.9rem;
+    width:120px;
 }
 
 .coupon-section input:focus {
