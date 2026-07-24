@@ -569,16 +569,21 @@ function updateCart() {
 function renderCart() {
     const container = document.getElementById('cartItems');
     const totalContainer = document.getElementById('cartTotal');
+    const couponSection = document.querySelector('.coupon-section');
+    const confirmBtn = document.getElementById('confirmOrderBtn');
+    
     if (!container) return;
+    
     if (cart.length === 0) {
         container.innerHTML = `<div class="empty-cart">🛒 Your cart is empty.</div>`;
         if (totalContainer) totalContainer.innerHTML = '';
-        document.querySelector('.coupon-section').style.display = 'none';
-        document.getElementById('confirmOrderBtn').style.display = 'none';
+        if (couponSection) couponSection.style.display = 'none';
+        if (confirmBtn) confirmBtn.style.display = 'none';
         return;
     }
-    document.querySelector('.coupon-section').style.display = 'flex';
-    document.getElementById('confirmOrderBtn').style.display = 'block';
+    
+    if (couponSection) couponSection.style.display = 'flex';
+    if (confirmBtn) confirmBtn.style.display = 'block';
 
     container.innerHTML = cart.map(item => `
         <div class="cart-item">
