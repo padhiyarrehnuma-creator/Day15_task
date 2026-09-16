@@ -1005,25 +1005,154 @@ function goToOrderStep(step) {
 }
 
 function placeOrder() {
-    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    if (couponApplied) total = total - couponDiscount;
-    const orderId = 'EL' + Date.now().toString().slice(-6);
-    const addressDetail = addresses[selectedAddress] || addresses['home'];
 
-    document.getElementById('successOrderId').textContent = orderId;
-    document.getElementById('successDate').textContent = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('successAmount').textContent = '₹' + total.toLocaleString('en-IN');
-    document.getElementById('successPayment').textContent = selectedPayment === 'card' ? 'Credit/Debit Card' :
-        selectedPayment === 'netbanking' ? 'Net Banking' :
-        selectedPayment === 'upi' ? 'UPI' : 'Cash on Delivery';
-    document.getElementById('successAddress').textContent = addressDetail;
+    if (cart.length === 0) {
+        showFeedback('⚠️ Your cart is empty!', 'error');
+        return;
+    }
+
+    let total = cart.reduce(
+        (sum, item) => sum + (item.price * item.quantity),
+        0
+    );
+
+    if (couponApplied) {
+        total = Math.max(0, total - couponDiscount);
+    }
+
+    const now = new Date();
+
+    const orderId =
+        'EL' + Date.now().toString().slice(-6);
+
+    const date =
+        now.toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+
+    const time =
+        now.toLocaleTimeString('en-IN', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+    const paymentMethod =
+        selectedPayment === 'card'
+            ? 'Credit/Debit Card'
+            : selectedPayment === 'netbanking'
+            ? 'Net Banking'
+            : selectedPayment === 'upi'
+            ? 'UPI'
+            : 'Cash on Delivery';
+
+    /* Online payment = Paid
+       COD = Payment Pending */
+
+    const paid =
+        selectedPayment === 'cod'
+            ? 0
+            : total;
+
+    const pending = total - paid;
+
+    const order = {
+
+        id: orderId,
+
+        date: `${date}, ${time}`,
+
+        createdAt: Date.now(),
+
+        updatedAt: Date.now(),
+
+        status:
+            selectedPayment === 'cod'
+                ? 'Ordered'
+                : 'Shipped',
+
+        items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            img: item.img
+        })),
+
+        total: total,
+
+        paid: paid,
+
+        pending: pending,
+
+        paymentMethod: paymentMethod,
+
+        address:
+            addresses[selectedAddress] ||
+            addresses.home ||
+            ''
+
+    };
+
+    /* Save order permanently */
+
+    const orders =
+        JSON.parse(
+            localStorage.getItem('gadgetpoint_orders')
+        ) || [];
+
+    orders.unshift(order);
+
+    localStorage.setItem(
+        'gadgetpoint_orders',
+        JSON.stringify(orders)
+    );
+
+    /* Existing success popup */
+
+    document.getElementById('successOrderId').textContent =
+        orderId;
+
+    document.getElementById('successDate').textContent =
+        `${date}, ${time}`;
+
+    document.getElementById('successAmount').textContent =
+        '₹' + total.toLocaleString('en-IN');
+
+    document.getElementById('successPayment').textContent =
+        paymentMethod;
+
+    document.getElementById('successAddress').textContent =
+        order.address;
 
     document.getElementById('orderPopup').classList.remove('open');
+
     document.getElementById('successPopup').classList.add('open');
+
     launchConfetti();
+
+    /* Empty cart */
+
     cart = [];
+
+    localStorage.setItem(
+        'electrohub_cart',
+        JSON.stringify(cart)
+    );
+
     updateCart();
     renderCart();
+
+    /* Refresh profile */
+
+    renderGadgetPointOrders();
+    renderGadgetPointPayments();
+
+    showFeedback(
+        '✅ Order placed & saved to Profile!',
+        'success'
+    );
 }
 
 // =========================================================
@@ -1175,3 +1304,849 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(`❤️ ${wishlist.length} items in wishlist`);
     console.log(`🔐 Logged in: ${isLoggedIn}`);
 });
+/* ============================================================
+   GADGETPOINT FINAL NEW FEATURES
+   Black + Lime Theme Support
+   ============================================================ */
+
+const GP_ORDER_KEY = 'gadgetpoint_orders';
+const GP_PROFILE_PHOTO_KEY = 'gadgetpoint_profile_photo';
+
+
+/* ============================================================
+   HELPER
+   ============================================================ */
+
+function gpMoney(amount) {
+    return '₹' + Number(amount || 0).toLocaleString('en-IN');
+}
+
+function getGadgetPointOrders() {
+
+    try {
+        return JSON.parse(
+            localStorage.getItem(GP_ORDER_KEY)
+        ) || [];
+    } catch (error) {
+        return [];
+    }
+}
+
+
+/* ============================================================
+   PROFILE PHOTO
+   ============================================================ */
+
+function setupGadgetPointProfilePhoto() {
+
+    const avatar =
+        document.querySelector('.profile-avatar');
+
+    if (!avatar) return;
+
+    if (document.getElementById('gpProfilePhotoInput')) {
+        return;
+    }
+
+    const savedPhoto =
+        localStorage.getItem(GP_PROFILE_PHOTO_KEY);
+
+    avatar.innerHTML = `
+
+        <div class="gp-profile-photo-wrap">
+
+            <img
+                id="gpProfilePhoto"
+                class="gp-profile-photo"
+                src="${savedPhoto || ''}"
+                style="${savedPhoto ? '' : 'display:none;'}"
+                alt="Profile Photo"
+            >
+
+            <div
+                id="gpDefaultProfileIcon"
+                class="gp-default-profile-icon"
+                style="${savedPhoto ? 'display:none;' : ''}"
+            >
+                👤
+            </div>
+
+            <button
+                type="button"
+                class="gp-photo-button"
+                id="gpPhotoButton"
+            >
+                📷
+            </button>
+
+            <input
+                type="file"
+                id="gpProfilePhotoInput"
+                accept="image/*"
+                hidden
+            >
+
+        </div>
+    `;
+
+    const button =
+        document.getElementById('gpPhotoButton');
+
+    const input =
+        document.getElementById('gpProfilePhotoInput');
+
+    button.addEventListener('click', function () {
+        input.click();
+    });
+
+    input.addEventListener('change', function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+
+            showFeedback(
+                '⚠️ Please select an image',
+                'error'
+            );
+
+            return;
+        }
+
+        if (file.size > 3 * 1024 * 1024) {
+
+            showFeedback(
+                '⚠️ Image should be below 3MB',
+                'error'
+            );
+
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+
+            const image =
+                event.target.result;
+
+            localStorage.setItem(
+                GP_PROFILE_PHOTO_KEY,
+                image
+            );
+
+            const photo =
+                document.getElementById(
+                    'gpProfilePhoto'
+                );
+
+            const defaultIcon =
+                document.getElementById(
+                    'gpDefaultProfileIcon'
+                );
+
+            photo.src = image;
+            photo.style.display = 'block';
+
+            defaultIcon.style.display = 'none';
+
+            showFeedback(
+                '✅ Profile photo updated!',
+                'success'
+            );
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+
+/* ============================================================
+   IMAGE ZOOM + DOUBLE CLICK POPUP
+   ============================================================ */
+
+let gpImageClickTimer = null;
+
+function setupGadgetPointImageFeatures() {
+
+    document.querySelectorAll(
+        '.product-card img'
+    ).forEach(function (image) {
+
+        if (image.dataset.gpImageReady === 'true') {
+            return;
+        }
+
+        image.dataset.gpImageReady = 'true';
+
+        image.addEventListener(
+            'click',
+            function (event) {
+
+                event.stopPropagation();
+
+                clearTimeout(gpImageClickTimer);
+
+                gpImageClickTimer =
+                    setTimeout(function () {
+
+                        openGadgetPointImageZoom(
+                            image.src,
+                            image.alt
+                        );
+
+                    }, 250);
+            }
+        );
+
+        image.addEventListener(
+            'dblclick',
+            function (event) {
+
+                event.stopPropagation();
+
+                clearTimeout(gpImageClickTimer);
+
+                const card =
+                    image.closest('.product-card');
+
+                if (!card) return;
+
+                const productId =
+                    Number(card.dataset.id);
+
+                openPopup(productId);
+            }
+        );
+
+    });
+}
+
+
+/* ============================================================
+   IMAGE ZOOM MODAL
+   ============================================================ */
+
+function openGadgetPointImageZoom(src, alt) {
+
+    let modal =
+        document.getElementById(
+            'gpImageZoomModal'
+        );
+
+    if (!modal) {
+
+        modal =
+            document.createElement('div');
+
+        modal.id =
+            'gpImageZoomModal';
+
+        modal.className =
+            'gp-image-zoom-modal';
+
+        modal.innerHTML = `
+
+            <button
+                class="gp-image-close"
+                id="gpImageZoomClose"
+            >
+                ✕
+            </button>
+
+            <img
+                id="gpZoomedImage"
+                src=""
+                alt=""
+            >
+
+            <div class="gp-zoom-text">
+                Single click image = Zoom
+                <br>
+                Double click = Product Details
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        document
+            .getElementById('gpImageZoomClose')
+            .addEventListener(
+                'click',
+                closeGadgetPointImageZoom
+            );
+
+        modal.addEventListener(
+            'click',
+            function (event) {
+
+                if (event.target === modal) {
+                    closeGadgetPointImageZoom();
+                }
+
+            }
+        );
+    }
+
+    document
+        .getElementById('gpZoomedImage')
+        .src = src;
+
+    document
+        .getElementById('gpZoomedImage')
+        .alt = alt || '';
+
+    modal.classList.add('open');
+
+    document.body.style.overflow =
+        'hidden';
+}
+
+function closeGadgetPointImageZoom() {
+
+    const modal =
+        document.getElementById(
+            'gpImageZoomModal'
+        );
+
+    if (!modal) return;
+
+    modal.classList.remove('open');
+
+    document.body.style.overflow = '';
+}
+
+
+/* ============================================================
+   3D PRODUCT CARD TILT
+   ============================================================ */
+
+function setupGadgetPoint3DTilt() {
+
+    document.querySelectorAll(
+        '.product-card'
+    ).forEach(function (card) {
+
+        if (card.dataset.gpTiltReady === 'true') {
+            return;
+        }
+
+        card.dataset.gpTiltReady = 'true';
+
+        card.addEventListener(
+            'mousemove',
+            function (event) {
+
+                if (window.innerWidth < 768) {
+                    return;
+                }
+
+                const rect =
+                    card.getBoundingClientRect();
+
+                const x =
+                    event.clientX - rect.left;
+
+                const y =
+                    event.clientY - rect.top;
+
+                const centerX =
+                    rect.width / 2;
+
+                const centerY =
+                    rect.height / 2;
+
+                const rotateX =
+                    ((y - centerY) / centerY) * -5;
+
+                const rotateY =
+                    ((x - centerX) / centerX) * 5;
+
+                card.style.transform =
+                    `perspective(900px)
+                     rotateX(${rotateX}deg)
+                     rotateY(${rotateY}deg)
+                     translateY(-5px)`;
+            }
+        );
+
+        card.addEventListener(
+            'mouseleave',
+            function () {
+
+                card.style.transform =
+                    'perspective(900px) rotateX(0deg) rotateY(0deg)';
+            }
+        );
+    });
+}
+
+
+/* ============================================================
+   RENDER PURCHASED ORDERS
+   ============================================================ */
+
+function renderGadgetPointOrders() {
+
+    const container =
+        document.getElementById(
+            'tab-orders'
+        );
+
+    if (!container) return;
+
+    const orders =
+        getGadgetPointOrders();
+
+    if (orders.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="gp-empty-box">
+
+                <div style="font-size:45px;">
+                    🛒
+                </div>
+
+                <h3>No new orders yet</h3>
+
+                <p>
+                    Tum jab product buy karogi,
+                    woh order yahan automatically show hoga.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        orders.map(function (order) {
+
+            const status =
+                order.status || 'Ordered';
+
+            const step =
+                status === 'Delivered'
+                    ? 3
+                    : status === 'Shipped'
+                    ? 2
+                    : 1;
+
+            return `
+
+                <div class="gp-order-card">
+
+                    <div class="gp-order-header">
+
+                        <div>
+                            <strong>
+                                #${order.id}
+                            </strong>
+
+                            <small>
+                                ${order.date}
+                            </small>
+                        </div>
+
+                        <span class="gp-order-status">
+                            ${
+                                status === 'Delivered'
+                                ? '✅ Delivered'
+                                : status === 'Shipped'
+                                ? '🚚 Shipped'
+                                : '📦 Ordered'
+                            }
+                        </span>
+
+                    </div>
+
+
+                    <div class="gp-order-products">
+
+                        ${order.items.map(function (item) {
+
+                            return `
+
+                                <div class="gp-order-product">
+
+                                    <img
+                                        src="${item.img}"
+                                        alt="${item.name}"
+                                    >
+
+                                    <div>
+                                        <strong>
+                                            ${item.name}
+                                        </strong>
+
+                                        <span>
+                                            Qty: ${item.quantity}
+                                        </span>
+                                    </div>
+
+                                    <b>
+                                        ${gpMoney(
+                                            item.price *
+                                            item.quantity
+                                        )}
+                                    </b>
+
+                                </div>
+
+                            `;
+
+                        }).join('')}
+
+                    </div>
+
+
+                    <div class="gp-order-total">
+
+                        <span>
+                            Total Amount
+                        </span>
+
+                        <strong>
+                            ${gpMoney(order.total)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="gp-tracking">
+
+                        <div class="
+                            gp-track-item
+                            ${step >= 1 ? 'active' : ''}
+                        ">
+                            <span>📦</span>
+                            <small>Ordered</small>
+                        </div>
+
+                        <div class="
+                            gp-track-line
+                            ${step >= 2 ? 'active' : ''}
+                        "></div>
+
+                        <div class="
+                            gp-track-item
+                            ${step >= 2 ? 'active' : ''}
+                        ">
+                            <span>🚚</span>
+                            <small>Shipped</small>
+                        </div>
+
+                        <div class="
+                            gp-track-line
+                            ${step >= 3 ? 'active' : ''}
+                        "></div>
+
+                        <div class="
+                            gp-track-item
+                            ${step >= 3 ? 'active' : ''}
+                        ">
+                            <span>✅</span>
+                            <small>Delivered</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="gp-last-update">
+
+                        Last updated:
+                        ${order.updatedAt
+                            ? new Date(
+                                order.updatedAt
+                              ).toLocaleString('en-IN')
+                            : order.date}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join('');
+}
+
+
+/* ============================================================
+   PAYMENT / PENDING PAYMENT
+   ============================================================ */
+
+function renderGadgetPointPayments() {
+
+    const container =
+        document.getElementById(
+            'tab-payments'
+        );
+
+    if (!container) return;
+
+    const orders =
+        getGadgetPointOrders();
+
+    if (orders.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="gp-payment-summary">
+
+                <h3>💳 Payment Summary</h3>
+
+                <p>
+                    No purchases yet.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+    const total =
+        orders.reduce(
+            (sum, order) =>
+                sum + Number(order.total || 0),
+            0
+        );
+
+    const paid =
+        orders.reduce(
+            (sum, order) =>
+                sum + Number(order.paid || 0),
+            0
+        );
+
+    const pending =
+        orders.reduce(
+            (sum, order) =>
+                sum + Number(order.pending || 0),
+            0
+        );
+
+    container.innerHTML = `
+
+        <div class="gp-payment-summary">
+
+            <h3>
+                💳 Payment Summary
+            </h3>
+
+            <div class="gp-payment-grid">
+
+                <div>
+                    <small>
+                        Total
+                    </small>
+
+                    <strong>
+                        ${gpMoney(total)}
+                    </strong>
+                </div>
+
+                <div>
+                    <small>
+                        Paid
+                    </small>
+
+                    <strong class="gp-paid">
+                        ${gpMoney(paid)}
+                    </strong>
+                </div>
+
+                <div>
+                    <small>
+                        Pending
+                    </small>
+
+                    <strong class="gp-pending">
+                        ${gpMoney(pending)}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        ${orders.map(function (order) {
+
+            return `
+
+                <div class="gp-payment-card">
+
+                    <div>
+
+                        <strong>
+                            ${gpMoney(order.total)}
+                        </strong>
+
+                        <span>
+                            #${order.id}
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            💳 ${order.paymentMethod}
+                        </span>
+
+                        ${
+                            order.pending > 0
+
+                            ? `
+                                <span class="gp-pending">
+                                    ⏳ Pending:
+                                    ${gpMoney(order.pending)}
+                                </span>
+                            `
+
+                            : `
+                                <span class="gp-paid">
+                                    ✅ Payment Complete
+                                </span>
+                            `
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join('')}
+
+    `;
+}
+
+
+/* ============================================================
+   DEMO LIVE ORDER TRACKING
+   ============================================================ */
+
+function updateGadgetPointTracking() {
+
+    const orders =
+        getGadgetPointOrders();
+
+    if (!orders.length) return;
+
+    let changed = false;
+
+    const now =
+        Date.now();
+
+    orders.forEach(function (order) {
+
+        if (!order.createdAt) {
+            order.createdAt =
+                now;
+
+            changed = true;
+
+            return;
+        }
+
+        const age =
+            now - order.createdAt;
+
+        /*
+            Demo tracking:
+
+            0-30 sec  → Ordered
+            30-60 sec → Shipped
+            60+ sec   → Delivered
+        */
+
+        if (
+            age >= 60000 &&
+            order.status !== 'Delivered'
+        ) {
+
+            order.status =
+                'Delivered';
+
+            order.updatedAt =
+                now;
+
+            changed = true;
+
+        } else if (
+            age >= 30000 &&
+            order.status === 'Ordered'
+        ) {
+
+            order.status =
+                'Shipped';
+
+            order.updatedAt =
+                now;
+
+            changed = true;
+        }
+
+    });
+
+    if (changed) {
+
+        localStorage.setItem(
+            GP_ORDER_KEY,
+            JSON.stringify(orders)
+        );
+
+        renderGadgetPointOrders();
+    }
+}
+
+
+/* ============================================================
+   INITIALIZE NEW FEATURES
+   ============================================================ */
+
+function initializeGadgetPointNewFeatures() {
+
+    setupGadgetPointProfilePhoto();
+
+    renderGadgetPointOrders();
+
+    renderGadgetPointPayments();
+
+    setupGadgetPointImageFeatures();
+
+    setupGadgetPoint3DTilt();
+
+    setInterval(function () {
+
+        setupGadgetPointImageFeatures();
+
+        setupGadgetPoint3DTilt();
+
+        updateGadgetPointTracking();
+
+    }, 1000);
+}
+
+
+/* ============================================================
+   RUN AFTER EXISTING APP LOAD
+   ============================================================ */
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        setTimeout(
+            initializeGadgetPointNewFeatures,
+            800
+        );
+
+    }
+);
